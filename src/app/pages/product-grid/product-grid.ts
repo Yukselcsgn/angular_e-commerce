@@ -1,19 +1,55 @@
 import { ProductCard } from '../../components/product-card.ts/product-card';
 import { Component, computed, input, signal } from '@angular/core';
 import { Product } from '../../models/products';
-
+import {MatSidenavContainer, MatSidenavContent, MatSidenav} from '@angular/material/sidenav'
+import { from } from 'rxjs';
+import {MatNavList, MatListItem} from '@angular/material/list'
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-product-grid',
-  imports: [ProductCard],
+  imports: [ProductCard, MatSidenav, MatSidenavContainer,
+     MatSidenavContent, MatNavList,MatListItem, RouterLink],
   template: `
+
+    <mat-sidenav-container>
+      <mat-sidenav mode="side" opened="true">
+        <div class="p-6">
+          <h2 class= "text-lg text-gray-900">Categories</h2>
+
+          <mat-nav-list>
+            @for(category of categories(); track category){
+              <mat-list-item class="my-2" [routerLink]="['/products', category]">
+                <span matListItemTitle>
+                  {{category}}
+                </span>
+              </mat-list-item>
+            }
+
+          </mat-nav-list>
+
+        </div>
+
+
+      </mat-sidenav>
+      <mat-sidenav-content class="bg-gray-100 p-6 h-full">
+        <h1 class="text-2x1 font-bold text-gray-900">{{category()}}</h1>
+        <div class="responsive-grid">
+          @for (product of filteredProducts(); track product.id) {
+          <app-product-card [product]="product" />
+        }
+        </div>
+      </mat-sidenav-content>
+    </mat-sidenav-container>
+
+
     <div class = "bg-gray-100 p-6 h-full">
       <h1 class="text-2x1 font-bold text-gray-900">{{category()}}</h1>
-      <div class="responsive-grid">
-      @for (product of filteredProducts(); track product.id) {
-        <app-product-card [product]="product"/>
-      }
-    </div>
+        <div class="responsive-grid">
+          @for (product of filteredProducts(); track product.id) {
+          <app-product-card [product]="product" />
+        }
+      </div>
     </div>
     
   `,
@@ -55,7 +91,7 @@ export default class ProductGrid {
     rating: 4.2,
     reviewCount: 560,
     inStock: false,
-    category: 'Giyilebilir Teknoloji'
+    category: 'Elektronik'
   },
   {
     id: '4',
@@ -66,7 +102,7 @@ export default class ProductGrid {
     rating: 4.7,
     reviewCount: 320,
     inStock: true,
-    category: 'Yaşam'
+    category: 'Aksesuar'
   },
   {
     id: '5',
@@ -132,7 +168,7 @@ export default class ProductGrid {
     rating: 4.5,
     reviewCount: 180,
     inStock: true,
-    category: 'Ev Otomasyonu'
+    category: 'Ev'
   },
   {
     id: '11',
@@ -175,7 +211,11 @@ export default class ProductGrid {
     
   })
 
-  
+  categories = signal<string[]>(['all','elektronik','aksesuar','mobilya','mutfak','ev','spor'])
+
+  addToCart(){
+
+  }
 //   filteredProducts = computed(() => {
 //   const selected = this.category().toLowerCase();
 
