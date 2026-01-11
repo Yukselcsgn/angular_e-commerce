@@ -1,0 +1,36 @@
+import { Product } from './../../models/products';
+import { Component, computed, inject, input } from '@angular/core';
+import { EcommerceStore } from '../../ecommerce-store';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+//import { Product } from '../../models/products';
+
+@Component({
+  selector: 'app-toggle-wishlist-button',
+  imports: [MatIconButton, MatIcon],
+  template: `
+    <button class="!bg-white border-0 shadow-md flex item-center justify-center cursor-pointer transition-all duration-200 hover:scale-110 hover:shadow-lg"
+      [class]="isInWishlist() ? '!text-red-500' : '!text-gray-400'"
+      matIconButton
+      (click)="toggleWishlist(product())">
+      <mat-icon>{{isInWishlist()? 'favorite' : 'favorite_border'}}</mat-icon>
+    </button>
+  `,
+  styles: ``,
+})
+export class ToggleWishlistButton {
+  product = input.required<Product>();
+
+  store=inject(EcommerceStore);
+
+  isInWishlist = computed(()=> this.store.wishlistItems().find(p=>p.id===this.product().id));
+
+  toggleWishlist(product: Product){
+    if (this.isInWishlist()){
+      //remove this
+      this.store.addToWishlist(product);
+    }else{
+      this.store.addToWishlist(product);
+    }
+  }
+}
