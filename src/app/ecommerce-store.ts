@@ -5,12 +5,17 @@ import { patchState, signalMethod, signalStore,
 import {produce} from 'immer';
 import { Toaster } from "./services/toaster";
 import { CartItem } from "./models/cart";
+import { MatDialog } from "@angular/material/dialog";
+import { SignInDialog } from "./components/sign-in-dialog/sign-in-dialog";
+import { SignInParams, SignUpParams, User } from "./models/user";
+import { Router } from "@angular/router";
 
 export type EcommerceState = {
   products:Product[];
   category:String;
   wishlistItems:Product[];
   cartItems: CartItem[];
+  user: User | undefined;
 };
 
 export const EcommerceStore = signalStore(
@@ -155,7 +160,8 @@ export const EcommerceStore = signalStore(
     ],
     category:'all',
     wishlistItems:[],
-    cartItems: []
+    cartItems: [],
+    user:undefined
   } as EcommerceState),
   withComputed(({category, products,wishlistItems})=>({
     filteredProducts: computed(()=>{
@@ -175,7 +181,7 @@ export const EcommerceStore = signalStore(
     wishlistCount: computed(()=> wishlistItems().length),
     cartCount: computed(()=>cartItems().reduce((acc,item)=> acc + item.quantity, 0)),
   })),
-  withMethods((store, toaster=inject(Toaster))=>({
+  withMethods((store, toaster=inject(Toaster),matDialog=inject(MatDialog), router=inject(Router))=>({
     setCategory: signalMethod<string>((category:string)=>{
       patchState(store, {category})
     }),
@@ -259,6 +265,57 @@ export const EcommerceStore = signalStore(
       patchState(store, {cartItems:store.cartItems().filter(c=>c.product.id!==product.id),
 
       });
+    },
+
+    proceedToCheckout:()=>{
+      if(!store.user()){
+        matDialog.open(SignInDialog,{
+          disableClose:true,
+          data:{
+            checkout:true,
+          }
+        });
+        return;
+      }
+      router.navigate(['/checkout']);
+    },
+
+    signIn:({email, password, checkout,dialogId, }:SignInParams)=>{
+      patchState(store,{
+        user:{
+          id:'1',
+          email,
+          name:'John Doe',
+          imageUrl:'https://randomuser.me/api/portraits/men/1.jpg',
+        }
+      });
+
+      matDialog.getDialogById(dialogId)?.close;
+
+      if(checkout){
+        router.navigate(['/checkout'])
+      }
+    },
+
+    signUp:({email, password,name, checkout,dialogId, }:SignUpParams)=>{
+      patchState(store,{
+        user:{
+          id:'1',
+          email,
+          name:'John Doe',
+          imageUrl:'https://randomuser.me/api/portraits/men/1.jpg',
+        }
+      });
+
+      matDialog.getDialogById(dialogId)?.close;
+
+      if(checkout){
+        router.navigate(['/checkout'])
+      }
+    },
+
+    signOut:()=>{
+      patchState(store,{user:undefined});
     }
 
     // addToCart(product: Product, quantity=1)=>{
