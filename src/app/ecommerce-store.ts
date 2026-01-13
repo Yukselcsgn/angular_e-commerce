@@ -171,7 +171,7 @@ export const EcommerceStore = signalStore(
     selectedProductId:undefined,
   } as EcommerceState),
   withStorageSync({key:'modern-store', select:({wishlistItems,cartItems,user})=>({wishlistItems,cartItems,user})}),
-  withComputed(({category, products, wishlistItems,cartItems})=>({
+  withComputed(({category, products, wishlistItems,cartItems,selectedProductId})=>({
     filteredProducts: computed(()=>{
       const selected = category().toLowerCase();
       if(category()=== 'all'){
@@ -188,10 +188,14 @@ export const EcommerceStore = signalStore(
     }),
     wishlistCount: computed(()=> wishlistItems().length),
     cartCount: computed(()=>cartItems().reduce((acc,item)=> acc + item.quantity, 0)),
+    selectedProduct:computed(()=>products().find((p)=>p.id===selectedProductId()))
   })),
   withMethods((store, toaster=inject(Toaster),matDialog=inject(MatDialog), router=inject(Router))=>({
     setCategory: signalMethod<string>((category:string)=>{
       patchState(store, {category})
+    }),
+    setProductId:signalMethod<string>((productId:string)=>{
+      patchState(store,{selectedProductId:productId})
     }),
     addToWishlist: (product:Product)=>{
       const updatedWishlistItems = produce(store.wishlistItems(),(draft)=>{

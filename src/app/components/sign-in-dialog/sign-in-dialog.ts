@@ -1,6 +1,6 @@
 import { App } from './../../app';
 import { Component, inject, signal } from '@angular/core';
-import { MatButton, MatIconButton } from "../../../../node_modules/@angular/material/types/button";
+import { MatButton, MatIconButton } from "@angular/material/button";
 import { MatIcon } from "@angular/material/icon";
 import { MAT_DIALOG_DATA, MatDialog, MatDialogClose, MatDialogRef} from '@angular/material/dialog';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -91,9 +91,9 @@ export class SignInDialog {
     const {email, password} = this.signInForm.value;
 
     this.store.signIn({
-      email, 
-      password, 
-      checkout:this.data?.checkout, 
+      email,
+      password,
+      checkout:this.data?.checkout,
       dialogId:this.dialogRef.id
     }as SignInParams);
   }
