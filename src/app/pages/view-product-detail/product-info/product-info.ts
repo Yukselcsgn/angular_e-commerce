@@ -1,3 +1,4 @@
+import { MatLabel } from '@angular/material/form-field';
 import { Component, inject, input, signal } from '@angular/core';
 import { Product } from '../../../models/products';
 import { TitleCasePipe } from '@angular/common';
@@ -7,7 +8,6 @@ import { MatAnchor } from "@angular/material/button";
 import { MatIcon } from "@angular/material/icon";
 import { ToggleWishlistButton } from "../../../components/toggle-wishlist-button/toggle-wishlist-button";
 import { EcommerceStore } from '../../../ecommerce-store';
-import { MatLabel } from "../../../../../node_modules/@angular/material/types/_form-field-module-chunk";
 import { StarRating } from "../../../components/star-rating/star-rating";
 
 @Component({
@@ -42,7 +42,7 @@ import { StarRating } from "../../../components/star-rating/star-rating";
       <button
         matButton="filled"
         class="w-2/3 flex items-center gap-2"
-        (click)="store.addToCart(product(),quantity())"
+        (click)="store.addToCart({ product: product(), quantity: quantity() })"
         [disabled]="!product().inStock"
       >
         <mat-icon>shopping_cart</mat-icon>

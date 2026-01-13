@@ -40,7 +40,7 @@ import { StarRating } from "../star-rating/star-rating";
         <span class="text-2xl font-bold text-gray-900">\${{product().price}}</span>
         <button matButton="filled"
           class="flex item-center gap-2"
-          (click)="store.addToCart(product())">
+          (click)="store.addToCart({ product: product(), quantity: 1 })">
           <mat-icon>shopping-cart</mat-icon>
           Add to Cart
         </button>

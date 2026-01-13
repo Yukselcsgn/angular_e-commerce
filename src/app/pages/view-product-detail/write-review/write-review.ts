@@ -75,8 +75,8 @@ export class WriteReview {
   store = inject(EcommerceStore);
 
   ratingOptions=signal<OptionItem[]>([
-    {label:'5 Stars - Excellent',value:5}
-    {label:'5 Stars - Good',value:4}
+    {label:'5 Stars - Excellent',value:5},
+    {label:'4 Stars - Good',value:4},
     {label:'3 Stars - Average',value:3},
     {label:'2 Stars - Poor',value:2},
     {label:'1 Star - Terrible',value:1}

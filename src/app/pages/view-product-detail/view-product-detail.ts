@@ -24,12 +24,12 @@ import { ViewReviews } from "./view-reviews/view-reviews";
   styles: ``,
 })
 export default class ViewProductDetail {
-  productId=input.required<string>();
+  productId = input.required<string>();
   store = inject(EcommerceStore);
 
-  constructor(){
+  constructor() {
     this.store.setProductId(this.productId);
   }
 
-  backRoute = computed(()=>'/products/${this.store.category()}');
+  backRoute = computed(() => `/products/${this.store.category()}`);
 }
